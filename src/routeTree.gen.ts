@@ -20,7 +20,7 @@ import { Route as PostsPostIdImport } from './routes/posts.$postId'
 import { Route as FilesSplatImport } from './routes/files/$'
 import { Route as LayoutLayoutBImport } from './routes/_layout/layout-b'
 import { Route as LayoutLayoutAImport } from './routes/_layout/layout-a'
-import { Route as PostsPostIdEditImport } from './routes/posts.$postId.edit'
+import { Route as PostsPostIdEditImport } from './routes/posts_.$postId.edit'
 
 // Create/Update Routes
 
@@ -79,9 +79,9 @@ const LayoutLayoutARoute = LayoutLayoutAImport.update({
 } as any)
 
 const PostsPostIdEditRoute = PostsPostIdEditImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => PostsPostIdRoute,
+  id: '/posts_/$postId/edit',
+  path: '/posts/$postId/edit',
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -151,36 +151,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsProfileImport
       parentRoute: typeof rootRoute
     }
-    '/posts/$postId/edit': {
-      id: '/posts/$postId/edit'
-      path: '/edit'
+    '/posts_/$postId/edit': {
+      id: '/posts_/$postId/edit'
+      path: '/posts/$postId/edit'
       fullPath: '/posts/$postId/edit'
       preLoaderRoute: typeof PostsPostIdEditImport
-      parentRoute: typeof PostsPostIdImport
+      parentRoute: typeof rootRoute
     }
   }
 }
 
 // Create and export the route tree
 
-interface PostsPostIdRouteChildren {
-  PostsPostIdEditRoute: typeof PostsPostIdEditRoute
-}
-
-const PostsPostIdRouteChildren: PostsPostIdRouteChildren = {
-  PostsPostIdEditRoute: PostsPostIdEditRoute,
-}
-
-const PostsPostIdRouteWithChildren = PostsPostIdRoute._addFileChildren(
-  PostsPostIdRouteChildren,
-)
-
 interface PostsRouteChildren {
-  PostsPostIdRoute: typeof PostsPostIdRouteWithChildren
+  PostsPostIdRoute: typeof PostsPostIdRoute
 }
 
 const PostsRouteChildren: PostsRouteChildren = {
-  PostsPostIdRoute: PostsPostIdRouteWithChildren,
+  PostsPostIdRoute: PostsPostIdRoute,
 }
 
 const PostsRouteWithChildren = PostsRoute._addFileChildren(PostsRouteChildren)
@@ -192,7 +180,7 @@ export interface FileRoutesByFullPath {
   '/layout-a': typeof LayoutLayoutARoute
   '/layout-b': typeof LayoutLayoutBRoute
   '/files/$': typeof FilesSplatRoute
-  '/posts/$postId': typeof PostsPostIdRouteWithChildren
+  '/posts/$postId': typeof PostsPostIdRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/posts/$postId/edit': typeof PostsPostIdEditRoute
@@ -205,7 +193,7 @@ export interface FileRoutesByTo {
   '/layout-a': typeof LayoutLayoutARoute
   '/layout-b': typeof LayoutLayoutBRoute
   '/files/$': typeof FilesSplatRoute
-  '/posts/$postId': typeof PostsPostIdRouteWithChildren
+  '/posts/$postId': typeof PostsPostIdRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/posts/$postId/edit': typeof PostsPostIdEditRoute
@@ -219,10 +207,10 @@ export interface FileRoutesById {
   '/_layout/layout-a': typeof LayoutLayoutARoute
   '/_layout/layout-b': typeof LayoutLayoutBRoute
   '/files/$': typeof FilesSplatRoute
-  '/posts/$postId': typeof PostsPostIdRouteWithChildren
+  '/posts/$postId': typeof PostsPostIdRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/profile': typeof SettingsProfileRoute
-  '/posts/$postId/edit': typeof PostsPostIdEditRoute
+  '/posts_/$postId/edit': typeof PostsPostIdEditRoute
 }
 
 export interface FileRouteTypes {
@@ -261,7 +249,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/settings/notifications'
     | '/settings/profile'
-    | '/posts/$postId/edit'
+    | '/posts_/$postId/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -274,6 +262,7 @@ export interface RootRouteChildren {
   FilesSplatRoute: typeof FilesSplatRoute
   SettingsNotificationsRoute: typeof SettingsNotificationsRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
+  PostsPostIdEditRoute: typeof PostsPostIdEditRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -285,6 +274,7 @@ const rootRouteChildren: RootRouteChildren = {
   FilesSplatRoute: FilesSplatRoute,
   SettingsNotificationsRoute: SettingsNotificationsRoute,
   SettingsProfileRoute: SettingsProfileRoute,
+  PostsPostIdEditRoute: PostsPostIdEditRoute,
 }
 
 export const routeTree = rootRoute
@@ -304,7 +294,8 @@ export const routeTree = rootRoute
         "/_layout/layout-b",
         "/files/$",
         "/settings/notifications",
-        "/settings/profile"
+        "/settings/profile",
+        "/posts_/$postId/edit"
       ]
     },
     "/": {
@@ -330,10 +321,7 @@ export const routeTree = rootRoute
     },
     "/posts/$postId": {
       "filePath": "posts.$postId.tsx",
-      "parent": "/posts",
-      "children": [
-        "/posts/$postId/edit"
-      ]
+      "parent": "/posts"
     },
     "/settings/notifications": {
       "filePath": "settings/notifications.tsx"
@@ -341,9 +329,8 @@ export const routeTree = rootRoute
     "/settings/profile": {
       "filePath": "settings/profile.tsx"
     },
-    "/posts/$postId/edit": {
-      "filePath": "posts.$postId.edit.tsx",
-      "parent": "/posts/$postId"
+    "/posts_/$postId/edit": {
+      "filePath": "posts_.$postId.edit.tsx"
     }
   }
 }
